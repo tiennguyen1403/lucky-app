@@ -1,7 +1,6 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import Snowfall from "react-snowfall";
 import { useRouter } from "next/navigation";
 import { Fireworks } from "@fireworks-js/react";
 
@@ -9,11 +8,6 @@ import useAuthStore from "@/store/authStore";
 import LoginButton from "@/components/LoginButton";
 
 import lantern from "@/public/lantern.gif";
-import yellowBlossom from "@/public/yellow-blossom.png";
-
-const image1 = document.createElement("img");
-image1.src = yellowBlossom.src;
-const images = [image1];
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
@@ -38,7 +32,6 @@ const LoginPage: React.FC = () => {
         <Image src={lantern} alt="lantern" className="w-60" />
         <Image src={lantern} alt="lantern" className="w-60" />
       </div>
-      <Snowfall images={images} radius={[1, 50]} snowflakeCount={20} />
       <Fireworks
         autostart
         options={{ opacity: 0.5, acceleration: 1 }}
