@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono, Playwrite_IN } from "next/font/google";
 import "./globals.css";
+import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
+import { Geist, Geist_Mono, Playwrite_IN } from "next/font/google";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${playwriteIndia.variable} antialiased h-screen m-auto`}
+        className={`${geistSans.variable} ${geistMono.variable} ${playwriteIndia.variable} antialiased h-screen bg-secondaryBgImage bg-no-repeat bg-center bg-cover overflow-hidden`}
       >
         <Toaster />
         {children}

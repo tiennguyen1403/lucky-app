@@ -2,36 +2,42 @@
 import React from "react";
 import Image from "next/image";
 import Snowfall from "react-snowfall";
-import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { Fireworks } from "@fireworks-js/react";
 
+import useAuthStore from "@/store/authStore";
 import LoginButton from "@/components/LoginButton";
 
-import logo from "@/public/logo.png";
+import lantern from "@/public/lantern.gif";
 import yellowBlossom from "@/public/yellow-blossom.png";
 
-const LoginPage: React.FC = () => {
-  const image1 = document.createElement("img");
-  image1.src = yellowBlossom.src;
+const image1 = document.createElement("img");
+image1.src = yellowBlossom.src;
+const images = [image1];
 
-  const images = [image1];
+const LoginPage: React.FC = () => {
+  const router = useRouter();
+  const { setUser } = useAuthStore();
 
   const handleClick = () => {
-    signIn("azure-ad");
+    router.push("/profile");
+    setUser({ email: "tien.nguyen.linh@nois.vn" });
   };
 
   return (
-    <div className="bg-secondary bg-no-repeat bg-cover bg-center h-full flex flex-col gap-4 justify-center items-center">
-      <div className="fixed top-0 left-0"></div>
-      <div className="fixed w-full top-6 left-1/2 -translate-x-1/2 flex justify-center">
-        <Image src={logo} alt="logo" className="scale-75" />
-      </div>
+    <div className="h-full flex flex-col gap-4 pt-40 items-center">
       <p className="font-playwrite-india text-4xl md:text-6xl font-bold mb-10 text-red-500 z-50 text-center flex flex-col xl:flex-row gap-6 gap-y-6 md:gap-y-20 leading-10 md:w-fit">
         <span>Happy</span>
         <span>Lunar New Year</span>
         <span>2025</span>
       </p>
       <LoginButton onClick={handleClick}>Đăng nhập</LoginButton>
+      <div className="fixed -top-10 left-1/2 -translate-x-1/2 flex">
+        <Image src={lantern} alt="lantern" className="w-60" />
+        <Image src={lantern} alt="lantern" className="w-60" />
+        <Image src={lantern} alt="lantern" className="w-60" />
+        <Image src={lantern} alt="lantern" className="w-60" />
+      </div>
       <Snowfall images={images} radius={[1, 50]} snowflakeCount={20} />
       <Fireworks
         autostart
@@ -44,7 +50,11 @@ const LoginPage: React.FC = () => {
           position: "fixed",
         }}
       />
-      <audio src="./background-sound.mp3" className="fixed bottom-4 left-1/2 -translate-x-1/2" />
+      <audio
+        controls
+        src="./background-sound.mp3"
+        className="fixed bottom-4 left-1/2 -translate-x-1/2"
+      />
     </div>
   );
 };

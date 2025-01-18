@@ -11,17 +11,21 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        primary: "#288bcb",
+        input: "#f4f4f5",
+        secondary: "#364152",
+        error: "#E21932",
       },
       backgroundImage: {
-        primary: "url(../public/background.jpg)",
-        secondary: "url(../public/secondary-background.jpg)",
+        primaryBgImage: "url(../public/background.jpg)",
+        secondaryBgImage: "url(../public/secondary-background.jpg)",
       },
       fontFamily: {
         "playwrite-india": ["var(--font-playwrite-india)"],
       },
       animation: {
         heartBeat: "heartBeat 2s infinite",
-        run: "run 10s ease-out infinite",
+        run: "run 5s linear infinite",
       },
       keyframes: {
         heartBeat: {
@@ -46,7 +50,7 @@ export default {
             transform: "translate(0, 0)",
           },
           "100%": {
-            transform: "translate(1500%, 0)",
+            transform: "translate(1200%, 0)",
           },
         },
       },

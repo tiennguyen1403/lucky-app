@@ -10,13 +10,16 @@
   },
   "dependencies": {
     "@fireworks-js/react": "^2.10.8",
+    "iconsax-react": "^0.0.8",
     "next": "15.1.4",
     "next-auth": "^4.24.11",
     "numeral": "^2.0.6",
     "react": "^19.0.0",
+    "react-countdown": "^2.3.6",
     "react-dom": "^19.0.0",
     "react-hot-toast": "^2.5.1",
-    "react-snowfall": "^2.2.0"
+    "react-snowfall": "^2.2.0",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

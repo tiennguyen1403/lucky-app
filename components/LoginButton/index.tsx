@@ -8,7 +8,7 @@ type Props = {
 const LoginButton = (props: Props) => {
   return (
     <button
-      className="font-medium text-white bg-[#338cf1] py-2 px-4 rounded-lg text-xl animate-heartBeat opacity-75 z-50"
+      className="font-medium text-white bg-primary py-2 px-4 rounded-lg text-xl animate-heartBeat z-50 shadow-xl"
       onClick={props.onClick}
     >
       {props.children}
