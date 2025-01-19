@@ -14,7 +14,7 @@ import yellowBlossom from "@/public/yellow-blossom.png";
 const LoginPage: React.FC = () => {
   const router = useRouter();
   const { setUser } = useAuthStore();
-  const [images, setImages] = React.useState<any>([]);
+  const [images, setImages] = React.useState<CanvasImageSource[]>([]);
 
   const handleClick = () => {
     router.push("/profile");
