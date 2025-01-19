@@ -31,7 +31,7 @@ const PlayPage: React.FC = () => {
     const updatedReceive = [...receive, { id, value: randomValue(50000, 150000, 10000) }];
     const updatedTotal = updatedReceive.reduce((total, item) => (total += item.value), 0);
     setReceive(updatedReceive);
-    setDescription(`Bạn đang có: ${numeral(updatedTotal).format("0,0")}`);
+    setDescription(`Bạn đang có: ${numeral(updatedTotal).format("0,0")}₫`);
     setError("Ồ, bạn đã chơi vòng này rồi, vào profile xem kết quả nhé!");
   };
 
@@ -46,8 +46,8 @@ const PlayPage: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col items-center justify-center py-2 pb-20">
-      <p className="text-primary text-center text-4xl font-semibold">{title}</p>
-      <p className="text-secondary text-center font-semibold px-12 text-lg">{description}</p>
+      <p className="text-primary text-center text-5xl font-semibold">{title}</p>
+      <p className="text-secondary text-center font-semibold px-12 text-xl">{description}</p>
       <div className="grid grid-cols-10 gap-4 gap-x-6 pt-10 md:px-20 lg:px-40">
         {error ? (
           <div className="col-span-10 flex flex-col items-center gap-4 pt-20 md:pt-28 px-6">

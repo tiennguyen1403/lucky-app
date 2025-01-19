@@ -7,6 +7,7 @@ import Countdown, { CountdownRendererFn } from "react-countdown";
 
 import useRoundStore from "@/store/roundStore";
 import useProfileStore from "@/store/profileStore";
+import CountdownComponent from "../CountdownComponent";
 
 import primaryRedEnvelope from "@/public/primary-envelope.png";
 
@@ -28,27 +29,25 @@ const MyEnvelope: React.FC = () => {
         </button>
       );
     } else {
-      return (
-        <p className="mt-10 px-6 py-2">
-          Vòng tiếp theo {hours}:{minutes}:{seconds}
-        </p>
-      );
+      return <CountdownComponent hours={hours} minutes={minutes} seconds={seconds} />;
     }
   };
 
   return (
-    <div className="h-full flex flex-col items-center justify-center py-2 pb-20">
-      <p className="text-primary text-4xl font-bold text-center">{title}</p>
-      <p className="text-secondary text-center font-semibold px-12 text-lg">{description}</p>
+    <div className="h-full flex flex-col items-center justify-center py-2 pb-20 lg:pb-2">
+      <p className="text-primary text-5xl font-bold text-center">{title}</p>
+      <p className="text-secondary text-center font-semibold px-12 text-xl">{description}</p>
       <div className="flex flex-col lg:flex-row gap-10 pt-10">
         {receive.map(({ id, value }) => (
           <div className="flex flex-col items-center gap-4" key={id}>
-            <Image src={primaryRedEnvelope} className="w-52" alt="red-envelope" />
-            <div>
-              <p className="text-primary text-center font-semibold text-2xl">
-                {numeral(value).format("0,0")}
-              </p>
-              <p className="text-secondary text-center font-medium text-lg">{id}</p>
+            <div className="relative">
+              <Image src={primaryRedEnvelope} className="w-52" alt="red-envelope" />
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 flex flex-col">
+                <p className="text-white text-center font-semibold tracking-wide text-lg ">{id}</p>
+                <p className="text-white text-center font-semibold text-2xl">
+                  {numeral(value).format("0,0")}₫
+                </p>
+              </div>
             </div>
           </div>
         ))}

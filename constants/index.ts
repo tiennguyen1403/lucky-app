@@ -5,9 +5,9 @@ import { IRound } from "@/types/round";
 export const INIT_PROFILE: IProfile = {
   round: 0,
   send: [
-    { id: randomId(10), value: 0 },
-    { id: randomId(10), value: 0 },
-    { id: randomId(10), value: 0 },
+    { id: randomId(15), value: 0 },
+    { id: randomId(15), value: 0 },
+    { id: randomId(15), value: 0 },
   ],
   receive: [],
   title: "Chia tiền vào bao",
@@ -19,6 +19,6 @@ export const INIT_ROUND: IRound = {
   error: null,
   title: "Vòng 1",
   description: "Vui lòng chọn 1 bao lì xì bất kì",
-  available: Array.from({ length: 100 }).map(() => ({ id: randomId(10), error: null })),
-  nextRoundTime: Date.now() + 15000,
+  available: Array.from({ length: 100 }).map(() => ({ id: randomId(15), error: null })),
+  nextRoundTime: Date.now() + 60000,
 };
