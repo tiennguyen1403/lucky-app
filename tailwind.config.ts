@@ -16,6 +16,12 @@ export default {
         secondary: "#364152",
         error: "#E21932",
       },
+      spacing: {
+        61: "244px",
+      },
+      screens: {
+        xs: "375px",
+      },
       backgroundImage: {
         primaryBgImage: "url(../public/background.jpg)",
         secondaryBgImage: "url(../public/secondary-background.jpg)",

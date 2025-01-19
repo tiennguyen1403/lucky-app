@@ -37,11 +37,11 @@ const LoginPage: React.FC = () => {
         <span>2025</span>
       </p>
       <LoginButton onClick={handleClick}>Đăng nhập</LoginButton>
-      <div className="fixed -top-10 left-1/2 -translate-x-1/2 flex">
+      <div className="fixed w-screen -top-10 left-1/2 -translate-x-61 flex">
         <Image src={lantern} alt="lantern" className="w-60" />
         <Image src={lantern} alt="lantern" className="w-60" />
-        <Image src={lantern} alt="lantern" className="w-60" />
-        <Image src={lantern} alt="lantern" className="w-60" />
+        <Image src={lantern} alt="lantern" className="w-60 hidden" />
+        <Image src={lantern} alt="lantern" className="w-60 hidden" />
       </div>
       <Snowfall images={images} radius={[1, 50]} snowflakeCount={20} />
       <Fireworks

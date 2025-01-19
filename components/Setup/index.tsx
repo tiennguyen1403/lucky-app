@@ -64,7 +64,7 @@ const Setup: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col items-center justify-center pb-20 lg:pb-2">
-      <p className="text-primary text-center text-5xl font-semibold">{title}</p>
+      <p className="text-primary text-center text-3xl md:text-5xl font-semibold">{title}</p>
       <p className="text-secondary text-center font-semibold px-12 text-xl">{description}</p>
       <div className="flex flex-col lg:flex-row gap-10 pt-10">
         {send.map(({ id, value }) => (

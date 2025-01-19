@@ -35,7 +35,7 @@ const MyEnvelope: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col items-center justify-center py-2 pb-20 lg:pb-2">
-      <p className="text-primary text-5xl font-bold text-center">{title}</p>
+      <p className="text-primary text-3xl md:text-5xl font-bold text-center">{title}</p>
       <p className="text-secondary text-center font-semibold px-12 text-xl">{description}</p>
       <div className="flex flex-col lg:flex-row gap-10 pt-10">
         {receive.map(({ id, value }) => (
