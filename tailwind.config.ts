@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 export default {
   content: [
@@ -18,6 +19,7 @@ export default {
       },
       spacing: {
         61: "244px",
+        130: "520px",
       },
       screens: {
         xs: "375px",
@@ -62,5 +64,55 @@ export default {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(({ addBase, addComponents, theme }) => {
+      addBase({
+        ".h1": {
+          fontSize: theme("fontSize.5xl"),
+        },
+        ".modal-title": {
+          color: "#181d27",
+          fontSize: theme("fontSize.lg"),
+          fontWeight: theme("fontWeight.semibold"),
+        },
+      });
+      addComponents({
+        ".icon-button": {
+          padding: "5px",
+          outline: "none",
+          transition: "all 0.2s",
+          borderRadius: theme("borderRadius.full"),
+          "&:hover": {
+            backgroundColor: "rgba(0,0,0,0.08)",
+          },
+        },
+        ".button": {
+          outline: "none",
+          borderRadius: theme("borderRadius.lg"),
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: theme("spacing.2"),
+          transition: "all 0.2s",
+        },
+        ".default-button": {
+          backgroundColor: "#288bcb",
+          color: theme("colors.white"),
+          fontSize: theme("fontSize.sm"),
+          height: theme("height.9"),
+          paddingInline: theme("padding.4"),
+        },
+        ".text-button": {
+          backgroundColor: "transparent",
+          color: "#181d27",
+          fontSize: theme("fontSize.sm"),
+          height: theme("height.9"),
+          paddingInline: theme("padding.4"),
+          "&:hover": {
+            backgroundColor: "rgba(0,0,0,0.08)",
+          },
+        },
+      });
+    }),
+  ],
 } satisfies Config;

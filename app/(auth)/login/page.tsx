@@ -10,15 +10,18 @@ import LoginButton from "@/components/LoginButton";
 
 import lantern from "@/public/lantern.gif";
 import yellowBlossom from "@/public/yellow-blossom.png";
+import Modal from "@/components/Modal";
 
 const LoginPage: React.FC = () => {
   const router = useRouter();
   const { setUser } = useAuthStore();
+  const [isOpen, setIsOpen] = React.useState(false);
   const [images, setImages] = React.useState<CanvasImageSource[]>([]);
 
   const handleClick = () => {
     router.push("/profile");
     setUser({ email: "tien.nguyen.linh@nois.vn" });
+    // setIsOpen(true);
   };
 
   React.useEffect(() => {
@@ -31,7 +34,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col gap-4 pt-40 items-center">
-      <p className="font-playwrite-india text-4xl md:text-6xl font-bold mb-10 text-red-500 z-50 text-center flex flex-col xl:flex-row gap-6 gap-y-6 md:gap-y-20 leading-10 md:w-fit">
+      <p className="font-playwrite-india text-4xl md:text-6xl font-bold mb-10 text-red-500 z-10 text-center flex flex-col xl:flex-row gap-6 gap-y-6 md:gap-y-20 leading-10 md:w-fit">
         <span>Happy</span>
         <span>Lunar New Year</span>
         <span>2025</span>
@@ -60,6 +63,16 @@ const LoginPage: React.FC = () => {
         src="./background-sound.mp3"
         className="fixed bottom-4 left-1/2 -translate-x-1/2"
       />
+      <Modal
+        open={isOpen}
+        size="sm"
+        title="Đăng nhập"
+        okText="Đăng nhập"
+        onCancel={() => setIsOpen(false)}
+        onConfirm={() => setIsOpen(false)}
+      >
+        <p>Hello world 123</p>
+      </Modal>
     </div>
   );
 };
