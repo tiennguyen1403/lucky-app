@@ -52,11 +52,6 @@ const LoginPage: React.FC = () => {
           position: "fixed",
         }}
       />
-      <audio
-        controls
-        src="./background-sound.mp3"
-        className="fixed bottom-4 left-1/2 -translate-x-1/2"
-      />
       <LoginModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );

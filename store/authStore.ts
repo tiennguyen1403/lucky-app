@@ -3,7 +3,7 @@ import { create } from "zustand";
 
 export type AuthStore = {
   user: IUser | null;
-  setUser: (user: IUser) => void;
+  setUser: (user: IUser | null) => void;
 };
 
 const useAuthStore = create<AuthStore>((set) => ({

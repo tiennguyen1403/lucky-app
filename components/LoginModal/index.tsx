@@ -59,6 +59,7 @@ const LoginModal: React.FC<Props> = (props) => {
     <Modal
       open={isOpen}
       okText="Đăng nhập"
+      maskClosable={false}
       title="Thông tin đăng nhập"
       confirmLoading={loading}
       onCancel={handleClose}

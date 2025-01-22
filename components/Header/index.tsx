@@ -1,22 +1,30 @@
 "use client";
 import React from "react";
+import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { ProfileCircle } from "iconsax-react";
+import { LogoutCurve, ProfileCircle } from "iconsax-react";
 
 import useAuthStore from "@/store/authStore";
+import { createClient } from "@/utils/client";
 
 import logo from "@/public/logo.png";
-import Link from "next/link";
 
-const loginButtonClassName = `bg-white text-primary shadow-lg font-medium tracking-wider px-6 py-2 rounded-xl flex items-center gap-2 md:text-lg`;
+const button = `flex items-center justify-center gap-1.5 outline-none bg-white rounded-xl shadow-xl px-3 py-1.5 flex-1`;
 
 const Header: React.FC = () => {
   const router = useRouter();
-  const { user } = useAuthStore();
+  const supabase = createClient();
+  const { user, setUser } = useAuthStore();
 
-  const onClick = () => {
+  const goProfile = () => {
     router.push("/profile");
+  };
+
+  const onSignOut = () => {
+    setUser(null);
+    supabase.auth.signOut();
+    router.replace("/login");
   };
 
   return (
@@ -29,10 +37,16 @@ const Header: React.FC = () => {
         <Image src={logo} alt="logo" className="w-60" />
       </Link>
       {user && (
-        <button className={loginButtonClassName} onClick={onClick}>
-          <ProfileCircle variant="Bold" size={32} color="#288bcb" />
-          <span>{user.email}</span>
-        </button>
+        <div className="flex items-center justify-between w-72 gap-4">
+          <button className={button} onClick={goProfile}>
+            <ProfileCircle variant="Bold" size="28" color="#288bcb" />
+            <span className="text-primary text-[15px] font-semibold">Profile</span>
+          </button>
+          <button className={button} onClick={onSignOut}>
+            <LogoutCurve size="28" color="#E21932" />
+            <span className="text-error text-[15px] font-semibold">Logout</span>
+          </button>
+        </div>
       )}
     </div>
   );

@@ -12,6 +12,7 @@ type Props = {
   cancelText?: string;
   okText?: string;
   confirmLoading?: boolean;
+  maskClosable?: boolean;
 };
 
 const Modal: React.FC<Props> = (props) => {
@@ -23,6 +24,7 @@ const Modal: React.FC<Props> = (props) => {
     cancelText = "Huỷ",
     okText = "Xác nhận",
     confirmLoading = false,
+    maskClosable = true,
     onCancel,
     onConfirm,
   } = props;
@@ -33,8 +35,7 @@ const Modal: React.FC<Props> = (props) => {
     : "opacity-0 pointer-events-none -z-10 bg-transparent";
   const overlayClassName = [overlayInitClassName, openClassName].join(" ");
 
-  const wrapperInitClassName =
-    "absolute top-61 left-1/2 -translate-x-1/2 py-5 px-6 rounded-xl bg-white flex flex-col shadow-2xl";
+  const wrapperInitClassName = `absolute top-61 left-1/2 -translate-x-1/2 py-5 px-6 rounded-xl bg-white flex flex-col shadow-2xl`;
   const sizeMapping: Record<string, string> = {
     xs: "w-[320px]",
     sm: "w-[384px]",
@@ -44,27 +45,25 @@ const Modal: React.FC<Props> = (props) => {
   };
   const wrapperClassName = [wrapperInitClassName, sizeMapping[size]].join(" ");
 
-  const confirmInitClassName =
-    "bg-primary text-white px-3 h-10 rounded-lg text-sm outline-none transition-all flex items-center gap-2";
-  const confirmLoadingClassName = confirmLoading ? "opacity-50 cursor-not-allowed" : "";
-  const confirmClassName = [confirmInitClassName, confirmLoadingClassName].join(" ");
+  const confirmInitClassName = `bg-primary text-white px-3 h-10 rounded-lg text-sm outline-none transition-all flex items-center gap-2`;
+  const cancelInitClassName = `bg-transparent text-secondary px-3 h-10 rounded-lg text-sm hover:bg-black/5 outline-none transition-colors`;
+  const loadingClassName = confirmLoading ? "opacity-50 cursor-not-allowed" : "";
+  const confirmClassName = [confirmInitClassName, loadingClassName].join(" ");
+  const cancelClassName = [cancelInitClassName, loadingClassName].join(" ");
 
   return (
     <div className={overlayClassName}>
-      <OutsideClickHandler onOutsideClick={onCancel}>
+      <OutsideClickHandler onOutsideClick={onCancel} disabled={!maskClosable} useCapture>
         <div className={wrapperClassName}>
           <div className="flex items-center justify-between -translate-y-1.5">
             <p className="modal-title flex-1">{title}</p>
-            <button className="icon-button" onClick={onCancel}>
+            <button className="icon-button" onClick={!confirmLoading ? onCancel : undefined}>
               <CloseCircle color="#535862" size={24} />
             </button>
           </div>
           <div className="pb-2">{children}</div>
           <div className="flex items-center justify-end gap-2">
-            <button
-              onClick={onCancel}
-              className="bg-transparent text-secondary px-3 h-10 rounded-lg text-sm hover:bg-black/5 outline-none transition-colors"
-            >
+            <button onClick={!confirmLoading ? onCancel : undefined} className={cancelClassName}>
               {cancelText}
             </button>
             <button onClick={!confirmLoading ? onConfirm : undefined} className={confirmClassName}>

@@ -24,6 +24,7 @@ const InputPassword: React.FC<Props> = (props) => {
         <input
           value={value}
           placeholder={placeholder}
+          autoComplete="new-password"
           className={sendInputClassName}
           type={showPassword ? "text" : "password"}
           onChange={(event) => onChange(event.target.value)}

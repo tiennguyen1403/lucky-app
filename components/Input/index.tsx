@@ -18,6 +18,7 @@ const Input: React.FC<Props> = (props) => {
       <div className="relative">
         <input
           value={value}
+          autoComplete="new-email"
           placeholder={placeholder}
           className={sendInputClassName}
           onChange={(event) => onChange(event.target.value)}
