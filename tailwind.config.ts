@@ -16,6 +16,9 @@ export default {
         input: "#f4f4f5",
         secondary: "#364152",
         error: "#E21932",
+        default: {
+          300: "#d4d4d8",
+        },
       },
       spacing: {
         61: "244px",
@@ -34,6 +37,7 @@ export default {
       animation: {
         heartBeat: "heartBeat 2s infinite",
         run: "run 5s linear infinite",
+        "spinner-ease-spin": "spinner-spin 0.8s ease infinite",
       },
       keyframes: {
         heartBeat: {
@@ -59,6 +63,14 @@ export default {
           },
           "100%": {
             transform: "translate(1200%, 0)",
+          },
+        },
+        "spinner-spin": {
+          "0%": {
+            transform: "rotate(0deg)",
+          },
+          "100%": {
+            transform: "rotate(1turn)",
           },
         },
       },

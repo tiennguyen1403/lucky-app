@@ -1,6 +1,7 @@
 import React from "react";
 import { CloseCircle } from "iconsax-react";
 import OutsideClickHandler from "react-outside-click-handler";
+import CircularProgress from "../CircularProgress";
 
 type Props = {
   children: React.ReactNode;
@@ -11,6 +12,7 @@ type Props = {
   size?: "xs" | "sm" | "md" | "lg" | "xl";
   cancelText?: string;
   okText?: string;
+  confirmLoading?: boolean;
 };
 
 const Modal: React.FC<Props> = (props) => {
@@ -21,14 +23,15 @@ const Modal: React.FC<Props> = (props) => {
     title = "",
     cancelText = "Huỷ",
     okText = "Xác nhận",
+    confirmLoading = false,
     onCancel,
+    onConfirm,
   } = props;
 
-  const overlayInitClassName = "fixed top-0 left-0 w-screen h-screen transition-all duration-200";
+  const overlayInitClassName = "fixed top-0 left-0 w-screen h-screen transition duration-200";
   const openClassName = open
     ? "opacity-100 pointer-events-auto z-20 bg-black/50"
     : "opacity-0 pointer-events-none -z-10 bg-transparent";
-
   const overlayClassName = [overlayInitClassName, openClassName].join(" ");
 
   const wrapperInitClassName =
@@ -40,8 +43,12 @@ const Modal: React.FC<Props> = (props) => {
     lg: "w-[512px]",
     xl: "w-[576px]",
   };
-
   const wrapperClassName = [wrapperInitClassName, sizeMapping[size]].join(" ");
+
+  const confirmInitClassName =
+    "bg-primary text-white px-3 h-10 rounded-lg text-sm outline-none transition-all flex items-center gap-2";
+  const confirmLoadingClassName = confirmLoading ? "opacity-50 cursor-not-allowed" : "";
+  const confirmClassName = [confirmInitClassName, confirmLoadingClassName].join(" ");
 
   return (
     <div className={overlayClassName}>
@@ -55,8 +62,15 @@ const Modal: React.FC<Props> = (props) => {
           </div>
           <div className="pb-2">{children}</div>
           <div className="flex items-center justify-end gap-2">
-            <button>{cancelText}</button>
-            <button>{okText}</button>
+            <button
+              onClick={onCancel}
+              className="bg-transparent text-secondary px-3 h-10 rounded-lg text-sm hover:bg-black/5 outline-none transition-colors"
+            >
+              {cancelText}
+            </button>
+            <button onClick={!confirmLoading ? onConfirm : undefined} className={confirmClassName}>
+              {okText}
+            </button>
           </div>
         </div>
       </OutsideClickHandler>

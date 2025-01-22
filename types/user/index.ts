@@ -1,3 +1,5 @@
 export type IUser = {
-  email: string;
+  id: string;
+  email?: string;
+  email_verified?: boolean;
 };
