@@ -2,10 +2,8 @@
 import React from "react";
 import Image from "next/image";
 import { Snowfall } from "react-snowfall";
-import { useRouter } from "next/navigation";
 import { Fireworks } from "@fireworks-js/react";
 
-import useAuthStore from "@/store/authStore";
 import LoginModal from "@/components/LoginModal";
 import LoginButton from "@/components/LoginButton";
 
@@ -13,14 +11,10 @@ import lantern from "@/public/lantern.gif";
 import yellowBlossom from "@/public/yellow-blossom.png";
 
 const LoginPage: React.FC = () => {
-  const router = useRouter();
-  const { setUser } = useAuthStore();
   const [isOpen, setIsOpen] = React.useState(false);
   const [images, setImages] = React.useState<CanvasImageSource[]>([]);
 
   const handleClick = () => {
-    // router.push("/profile");
-    // setUser({ email: "tien.nguyen.linh@nois.vn" });
     setIsOpen(true);
   };
 
