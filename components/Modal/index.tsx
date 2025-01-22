@@ -1,7 +1,6 @@
 import React from "react";
 import { CloseCircle } from "iconsax-react";
 import OutsideClickHandler from "react-outside-click-handler";
-import CircularProgress from "../CircularProgress";
 
 type Props = {
   children: React.ReactNode;
