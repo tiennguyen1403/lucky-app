@@ -12,7 +12,7 @@ import axiosInstance from "@/utils/axios";
 import { generateRandomId } from "@/helpers";
 import useAuthStore from "@/store/authStore";
 import { IResponse } from "@/types/general.types";
-import useProfileStore from "@/store/profileStore";
+import useEnvelopeStore from "@/store/envelopeStore";
 
 import primaryRedEnvelope from "@/public/primary-envelope.png";
 
@@ -28,7 +28,6 @@ const envelopeClassName = (error?: FieldError): string => {
 const schema = z.object({
   envelopes: z.array(
     z.object({
-      eid: z.string().nonempty({ message: "ID của bao không được rỗng" }),
       value: z
         .number()
         .min(50000, { message: "Giá trị tối thiểu 50k" })
@@ -37,27 +36,19 @@ const schema = z.object({
   ),
 });
 
-const defaultValues = Array.from({ length: 3 }).map(() => ({
-  eid: generateRandomId(15),
-  value: 0,
-}));
-
 type DataType = z.infer<typeof schema>;
 
 const Setup: React.FC = () => {
-  const {
-    title,
-    description,
-    send,
-    setSend,
-    setTitle: setProfileTitle,
-    setDescription,
-  } = useProfileStore();
-  const { user } = useAuthStore();
+  const { setupEnvelopes } = useEnvelopeStore();
+  const firstSetup = !setupEnvelopes.length;
+
+  const envelopes = Array.from({ length: 3 }).map((_, index) => ({
+    value: firstSetup ? 0 : setupEnvelopes?.[index]?.value || 0,
+  }));
 
   const { control, handleSubmit } = useForm({
     resolver: zodResolver(schema),
-    defaultValues: { envelopes: defaultValues },
+    defaultValues: { envelopes },
   });
   const { fields } = useFieldArray({ control, name: "envelopes" });
 
@@ -67,35 +58,27 @@ const Setup: React.FC = () => {
     const totalValue = envelopes.reduce((total, item) => (total += item.value), 0);
     if (totalValue < 300000) return toast.error("Tổng 3 bao phải bằng 300k");
 
-    const payload = envelopes.map((envelope) => ({
-      ...envelope,
-      round: null,
-      sender: user?.id || null,
-      receiver: null,
-    }));
+    const url = "/envelope/setup-envelopes";
+    const { error } = await axiosInstance.post<null, IResponse<null>>(url, {
+      envelopes,
+      firstSetup,
+    });
 
-    try {
-      const { success, error } = await axiosInstance.post<unknown, IResponse>("/envelope", {
-        envelopes: payload,
-      });
-
-      if (success) {
-        toast.success("Lưu thành công");
-      } else {
-        toast.error(error);
-      }
-    } catch (error: any) {
-      console.log("error :>> ", error);
-    }
+    if (error) toast.error(error);
+    else toast.success("Lưu thành công");
   };
 
   return (
     <div className="h-full flex flex-col items-center justify-center pb-20 lg:pb-2">
-      <p className="text-primary text-center text-3xl md:text-5xl font-semibold">{title}</p>
-      <p className="text-secondary text-center font-semibold px-12 text-xl">{description}</p>
+      <p className="text-primary text-center text-3xl md:text-5xl font-semibold">
+        Chia tiền vào bao
+      </p>
+      <p className="text-secondary text-center font-semibold px-12 text-xl">
+        Vui lòng chọn số tiền cho mỗi bao (thấp nhất 50k, cao nhất 200k)
+      </p>
       <div className="flex flex-col lg:flex-row gap-10 pt-10">
-        {fields.map((item, index) => (
-          <div className="flex flex-col items-center gap-4" key={item.id}>
+        {fields.map((_, index) => (
+          <div className="flex flex-col items-center gap-4" key={index}>
             <Image src={primaryRedEnvelope} className="w-52" alt="red-envelope" />
             <Controller
               control={control}

@@ -9,7 +9,7 @@ type Props = {
 
 const AuthLayout: React.FC<Props> = ({ children }) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-full">
       <Header />
       <div className="flex-1">{children}</div>
     </div>

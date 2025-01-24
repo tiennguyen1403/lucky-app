@@ -12,6 +12,9 @@ export async function POST(request: NextRequest) {
   const supabase = await createClient();
   const { envelopes } = await request.json();
 
+  console.log("envelopes :>> ", envelopes);
+  return NextResponse.json({ success: true, error: null });
+
   const { data } = await supabase
     .from("rounds")
     .select("startTime")

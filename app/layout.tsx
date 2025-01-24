@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
 import { Playwrite_IN, Mulish } from "next/font/google";
 
+import AuthStateLayout from "@/layouts/RootLayout";
+
 const playwriteIndia = Playwrite_IN({
   variable: "--font-playwrite-india",
   weight: ["100", "200", "300", "400"],
@@ -32,7 +34,7 @@ export default function RootLayout({
     <html lang="en" className="h-screen">
       <body className={`${playwriteIndia.variable} ${mulish.className} ${bodyClassName}`}>
         <Toaster />
-        {children}
+        <AuthStateLayout>{children}</AuthStateLayout>
       </body>
     </html>
   );

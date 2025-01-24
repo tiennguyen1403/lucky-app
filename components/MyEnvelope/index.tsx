@@ -38,7 +38,7 @@ const MyEnvelope: React.FC = () => {
       <p className="text-primary text-3xl md:text-5xl font-bold text-center">{title}</p>
       <p className="text-secondary text-center font-semibold px-12 text-xl">{description}</p>
       <div className="flex flex-col lg:flex-row gap-10 pt-10">
-        {receive.map(({ id, value }) => (
+        {/* {receive.map(({ id, value }) => (
           <div className="flex flex-col items-center gap-4" key={id}>
             <div className="relative">
               <Image src={primaryRedEnvelope} className="w-52" alt="red-envelope" />
@@ -50,7 +50,7 @@ const MyEnvelope: React.FC = () => {
               </div>
             </div>
           </div>
-        ))}
+        ))} */}
       </div>
       <Countdown date={nextRoundTime} renderer={renderer} />
     </div>
