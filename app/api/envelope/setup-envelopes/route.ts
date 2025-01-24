@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { generateRandomId } from "@/helpers";
 import { createClient } from "@/utils/server";
+import { generateRandomId, generateUUID } from "@/helpers";
 
 export async function GET(request: NextRequest) {
   const supabase = await createClient();
@@ -28,27 +28,17 @@ export async function POST(request: NextRequest) {
     .select("*")
     .eq("sender", userId);
 
-  console.log("existingEnvelopes :>> ", existingEnvelopes);
+  const payload = envelopes.map(({ value }: any, index: number) => ({
+    value,
+    round: null,
+    receiver: null,
+    sender: userId,
+    id: existingEnvelopes?.[index]?.id || generateUUID(),
+    eid: existingEnvelopes?.[index]?.eid || generateRandomId(15),
+  }));
 
-  // if(firstSetup) {
-  //   payload = envelopes.map(({ value }: any) => ({
-  //     value,
-  //     round: null,
-  //     receiver: null,
-  //     sender: userId,
-  //     eid: generateRandomId(15),
-  //   }))
-  // } else {
-  //   payload = envelopes.map(({value}: any) => ({
-  //     value,
-  //   }))
-  // }
+  const { error } = await supabase.from("envelopes").upsert(payload);
 
-  // const { data, error } = await supabase
-  //   .from("envelopes")
-  //   .select("sender, value")
-  //   .eq("sender", userId);
-
-  // if (error) return NextResponse.json({ success: false, error: error.message });
+  if (error) return NextResponse.json({ success: false, error: error.message });
   return NextResponse.json({ success: true, error: null });
 }

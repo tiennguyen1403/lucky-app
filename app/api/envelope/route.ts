@@ -2,18 +2,22 @@ import dayjs from "dayjs";
 import { createClient } from "@/utils/server";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const supabase = await createClient();
-  const response = await supabase.from("envelopes").select("id, eid");
-  return NextResponse.json(response);
+  const { data, error } = await supabase
+    .from("envelopes")
+    .select("eid")
+    .is("receiver", null)
+    // .eq("round", null)
+    .neq("sender", null);
+
+  if (error) return NextResponse.json({ success: false, error: error.message });
+  return NextResponse.json({ success: true, error: null, data });
 }
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
   const { envelopes } = await request.json();
-
-  console.log("envelopes :>> ", envelopes);
-  return NextResponse.json({ success: true, error: null });
 
   const { data } = await supabase
     .from("rounds")
