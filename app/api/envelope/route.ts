@@ -7,9 +7,9 @@ export async function GET() {
   const { data, error } = await supabase
     .from("envelopes")
     .select("eid")
+    .is("round", null)
     .is("receiver", null)
-    // .eq("round", null)
-    .neq("sender", null);
+    .not("sender", "is", null);
 
   if (error) return NextResponse.json({ success: false, error: error.message });
   return NextResponse.json({ success: true, error: null, data });

@@ -6,7 +6,9 @@ import { IRounds } from "@/types/round.types";
 
 type RoundStore = IRound & {
   rounds: IRounds;
+  isSetupTime: boolean;
   setRounds: (rounds: IRounds) => void;
+  setIsSetupTime: (isSetupTime: boolean) => void;
   setTitle: (title: string) => void;
   setRound: (round: number) => void;
   setError: (error: string | null) => void;
@@ -17,6 +19,8 @@ type RoundStore = IRound & {
 const useRoundStore = create<RoundStore>((set) => ({
   ...INIT_ROUND,
   rounds: [],
+  isSetupTime: true,
+  setIsSetupTime: (isSetupTime) => set((state) => ({ ...state, isSetupTime })),
   setRounds: (rounds) => set((state) => ({ ...state, rounds })),
   setTitle: (title) => set((state) => ({ ...state, title })),
   setRound: (round) => set((state) => ({ ...state, round })),
