@@ -11,14 +11,15 @@ import { IEnvelopes } from "@/types/envelope.types";
 import useRoundStore from "@/store/roundStore";
 import useEnvelopeStore from "@/store/envelopeStore";
 import ScreenLoading from "@/components/ScreenLoading";
+import { getRoundState } from "@/helpers";
 
 type Props = {
   children: React.ReactNode;
 };
 
 const ClientLayout: React.FC<Props> = ({ children }) => {
+  const { setIsSetupTime, setRounds, setRoundState } = useRoundStore();
   const { setSetupEnvelopes, setEnvelopes } = useEnvelopeStore();
-  const { setIsSetupTime, setRounds } = useRoundStore();
   const [loading, setLoading] = React.useState(true);
 
   const getSetupEnvelopes = async () => {
@@ -26,6 +27,7 @@ const ClientLayout: React.FC<Props> = ({ children }) => {
     const { data = [], error } = await axiosInstance.get<null, IResponse<IEnvelopes>>(url);
     if (error) return toast.error(error);
     setSetupEnvelopes(data);
+    return Promise.resolve(data);
   };
 
   const getRounds = async () => {
@@ -37,6 +39,7 @@ const ClientLayout: React.FC<Props> = ({ children }) => {
     else setIsSetupTime(false);
 
     setRounds(data);
+    return Promise.resolve(data);
   };
 
   const getEnvelopes = async () => {
@@ -44,10 +47,16 @@ const ClientLayout: React.FC<Props> = ({ children }) => {
     const { error, data = [] } = await axiosInstance.get<null, IResponse<IEnvelopes>>(url);
     if (error) return toast.error(error);
     setEnvelopes(data);
+    return Promise.resolve(data);
   };
 
   React.useEffect(() => {
-    Promise.all([getRounds(), getEnvelopes(), getSetupEnvelopes()]).then(() => setLoading(false));
+    Promise.all([getRounds(), getEnvelopes(), getSetupEnvelopes()]).then(
+      ([rounds, envelopes, setupEnvelopes]) => {
+        setRoundState(getRoundState(rounds as IRounds));
+        setLoading(false);
+      }
+    );
   }, []);
 
   if (loading) return <ScreenLoading />;
