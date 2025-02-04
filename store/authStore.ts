@@ -1,5 +1,6 @@
-import { IUser } from "@/types/user";
 import { create } from "zustand";
+
+import { IUser } from "@/types/user.types";
 
 export type AuthStore = {
   user: IUser | null;

@@ -2,12 +2,6 @@ import dayjs from "dayjs";
 
 import { IRounds, RoundStatus } from "@/types/round.types";
 
-export const randomId = (length = 6) => {
-  return Math.random()
-    .toString(36)
-    .substring(2, length + 2);
-};
-
 export const generateId = (length: number): string => {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let result = "";

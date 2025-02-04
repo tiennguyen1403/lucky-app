@@ -3,36 +3,19 @@ import numeral from "numeral";
 import Image from "next/image";
 import { Game } from "iconsax-react";
 import { useRouter } from "next/navigation";
-import Countdown, { CountdownRendererFn } from "react-countdown";
 
-import useRoundStore from "@/store/roundStore";
-import CountdownComponent from "../CountdownComponent";
+import useEnvelopeStore from "@/store/envelopeStore";
 
 import primaryRedEnvelope from "@/public/primary-envelope.png";
-import useEnvelopeStore from "@/store/envelopeStore";
 
 const playButtonClassName = `mt-10 bg-primary text-white px-6 py-2 w-40 rounded-lg text-xl font-medium tracking-wide flex items-center justify-center gap-2`;
 
 const MyEnvelope: React.FC = () => {
   const router = useRouter();
-  const { nextRoundTime } = useRoundStore();
   const { myEnvelopes } = useEnvelopeStore();
   const totalReceive = myEnvelopes.reduce((total, item) => (total += item?.value || 0), 0);
 
   const onPlay = () => router.push("/play");
-
-  const renderer: CountdownRendererFn = ({ hours, minutes, seconds, completed }) => {
-    if (completed) {
-      return (
-        <button className={playButtonClassName} onClick={onPlay}>
-          <Game color="#ffffff" size={24} />
-          <span>Play</span>
-        </button>
-      );
-    } else {
-      return <CountdownComponent hours={hours} minutes={minutes} seconds={seconds} />;
-    }
-  };
 
   return (
     <div className="h-full flex flex-col items-center justify-start py-2 pb-20 lg:pb-2">
@@ -41,19 +24,21 @@ const MyEnvelope: React.FC = () => {
         Bạn đang có: {numeral(totalReceive).format("0,0")}₫
       </p>
       <div className="flex flex-col lg:flex-row gap-10 pt-10">
-        {/* {receive.map(({ id, value }) => (
-          <div className="flex flex-col items-center gap-4" key={id}>
+        {myEnvelopes.map(({ eid, value }) => (
+          <div className="flex flex-col items-center gap-4" key={eid}>
             <div className="relative">
-              <Image src={primaryRedEnvelope} className="w-52" alt="red-envelope" />
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 flex flex-col">
-                <p className="text-white text-center font-semibold tracking-wide text-lg ">{id}</p>
-                <p className="text-white text-center font-semibold text-2xl">
+              <Image src={primaryRedEnvelope} className="w-60 rounded-2xl" alt="red-envelope" />
+              <div className="absolute top-6 left-1/2 -translate-x-1/2 flex flex-col bg-white rounded-xl px-3 py-1 shadow-md">
+                <p className="text-secondary text-center font-semibold tracking-wide text-lg ">
+                  {eid}
+                </p>
+                <p className="text-error text-center font-semibold text-2xl">
                   {numeral(value).format("0,0")}₫
                 </p>
               </div>
             </div>
           </div>
-        ))} */}
+        ))}
       </div>
       <button className={playButtonClassName} onClick={onPlay}>
         <Game color="#ffffff" size={24} />
