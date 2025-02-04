@@ -1,23 +1,31 @@
 import { create } from "zustand";
 
-import { IRound } from "@/types/round";
-import { INIT_ROUND } from "@/constants";
+import { IRounds, RoundStatus } from "@/types/round.types";
 
-type RoundStore = IRound & {
-  setTitle: (title: string) => void;
-  setRound: (round: number) => void;
-  setError: (error: string | null) => void;
-  setDescription: (description: string) => void;
-  setNextRoundTime: (nextRoundTime: number) => void;
+type RoundStore = {
+  rounds: IRounds;
+  roundStatus: RoundStatus;
+  nextRound: number | null;
+  currentRound: number | null;
+  nextRoundTime: string | null;
+  setRounds: (rounds: IRounds) => void;
+  setNextRound: (nextRound: number | null) => void;
+  setRoundStatus: (roundStatus: RoundStatus) => void;
+  setCurrentRound: (currentRound: number | null) => void;
+  setNextRoundTime: (nextRoundTime: string | null) => void;
 };
 
 const useRoundStore = create<RoundStore>((set) => ({
-  ...INIT_ROUND,
-  setTitle: (title) => set((state) => ({ ...state, title })),
-  setRound: (round) => set((state) => ({ ...state, round })),
-  setError: (error) => set((state) => ({ ...state, error })),
-  setDescription: (description) => set((state) => ({ ...state, description })),
-  setNextRoundTime: (nextRoundTime: number) => set((state) => ({ ...state, nextRoundTime })),
+  rounds: [],
+  nextRound: null,
+  currentRound: null,
+  nextRoundTime: null,
+  roundStatus: RoundStatus.FINISHED,
+  setRounds: (rounds) => set((state) => ({ ...state, rounds })),
+  setNextRound: (nextRound) => set((state) => ({ ...state, nextRound })),
+  setRoundStatus: (roundStatus) => set((state) => ({ ...state, roundStatus })),
+  setCurrentRound: (currentRound) => set((state) => ({ ...state, currentRound })),
+  setNextRoundTime: (nextRoundTime) => set((state) => ({ ...state, nextRoundTime })),
 }));
 
 export default useRoundStore;

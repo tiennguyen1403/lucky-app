@@ -36,5 +36,7 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  supabaseResponse.cookies.set("userId", data.user?.id || "");
+
   return supabaseResponse;
 }
