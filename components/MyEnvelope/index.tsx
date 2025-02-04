@@ -9,25 +9,15 @@ import useRoundStore from "@/store/roundStore";
 import CountdownComponent from "../CountdownComponent";
 
 import primaryRedEnvelope from "@/public/primary-envelope.png";
-import axiosInstance from "@/utils/axios";
-import { IResponse } from "@/types/general.types";
 import useEnvelopeStore from "@/store/envelopeStore";
-import toast from "react-hot-toast";
 
 const playButtonClassName = `mt-10 bg-primary text-white px-6 py-2 w-40 rounded-lg text-xl font-medium tracking-wide flex items-center justify-center gap-2`;
 
 const MyEnvelope: React.FC = () => {
   const router = useRouter();
   const { nextRoundTime } = useRoundStore();
-  const { myEnvelopes, setMyEnvelopes } = useEnvelopeStore();
+  const { myEnvelopes } = useEnvelopeStore();
   const totalReceive = myEnvelopes.reduce((total, item) => (total += item?.value || 0), 0);
-
-  const getMyEnvelopes = async () => {
-    const url = "/envelope/my-envelopes";
-    const { data, error } = await axiosInstance.get<null, IResponse<any>>(url);
-    if (error) return toast.error(error);
-    setMyEnvelopes(data);
-  };
 
   const onPlay = () => router.push("/play");
 
@@ -43,10 +33,6 @@ const MyEnvelope: React.FC = () => {
       return <CountdownComponent hours={hours} minutes={minutes} seconds={seconds} />;
     }
   };
-
-  React.useEffect(() => {
-    getMyEnvelopes();
-  }, []);
 
   return (
     <div className="h-full flex flex-col items-center justify-start py-2 pb-20 lg:pb-2">

@@ -8,7 +8,8 @@ import { Controller, useForm } from "react-hook-form";
 import Modal from "../Modal";
 import Input from "../Input";
 import InputPassword from "../InputPassword";
-import { createClient } from "@/utils/client";
+import axiosInstance from "@/utils/axios";
+import { IResponse } from "@/types/general.types";
 
 type Props = {
   isOpen: boolean;
@@ -26,7 +27,6 @@ const defaultValues: LoginType = { email: "", password: "" };
 
 const LoginModal: React.FC<Props> = (props) => {
   const router = useRouter();
-  const supabase = createClient();
   const { isOpen, setIsOpen } = props;
   const [loading, setLoading] = React.useState(false);
 
@@ -42,10 +42,10 @@ const LoginModal: React.FC<Props> = (props) => {
 
   const handleLogin = async (values: LoginType) => {
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword(values);
+    const { error } = await axiosInstance.post<null, IResponse<null>>("/login", values);
     setLoading(false);
 
-    if (error) return toast.error(error.message);
+    if (error) return toast.error(error);
 
     toast.success("Đăng nhập thành công!");
     router.push("/profile");

@@ -6,16 +6,23 @@ import MyEnvelope from "@/components/MyEnvelope";
 import useRoundStore from "@/store/roundStore";
 import useEnvelopeStore from "@/store/envelopeStore";
 import TimeoutAlert from "@/components/TimeoutAlert";
+import FinishedAlert from "@/components/FinishedAlert";
+import { RoundStatus } from "@/types/round.types";
 
 const ProfilePage: React.FC = () => {
-  const { isSetupTime } = useRoundStore();
+  const { roundStatus } = useRoundStore();
   const { setupEnvelopes } = useEnvelopeStore();
 
   return (
     <>
-      {isSetupTime && <Setup />}
-      {Boolean(!isSetupTime && !setupEnvelopes.length) && <TimeoutAlert />}
-      {Boolean(!isSetupTime && setupEnvelopes.length) && <MyEnvelope />}
+      {roundStatus === RoundStatus.SETUP && <Setup />}
+      {Boolean(
+        [RoundStatus.IN_PROGRESS, RoundStatus.BREAK].includes(roundStatus) && !setupEnvelopes.length
+      ) && <TimeoutAlert />}
+      {Boolean(
+        [RoundStatus.IN_PROGRESS, RoundStatus.BREAK].includes(roundStatus) && setupEnvelopes.length
+      ) && <MyEnvelope />}
+      {roundStatus === RoundStatus.FINISHED && <FinishedAlert />}
     </>
   );
 };

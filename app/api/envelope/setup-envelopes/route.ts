@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { createClient } from "@/utils/server";
 import { generateRandomId, generateUUID } from "@/helpers";
+import { IEnvelopes } from "@/types/envelope.types";
 
 export async function GET(request: NextRequest) {
   const supabase = await createClient();
@@ -21,14 +22,14 @@ export async function POST(request: NextRequest) {
   const userId = userCookie?.value || null;
   if (!userId) return NextResponse.json({ success: false, error: null });
 
-  const { envelopes } = await request.json();
+  const { envelopes }: { envelopes: IEnvelopes } = await request.json();
 
   const { data: existingEnvelopes } = await supabase
     .from("envelopes")
     .select("*")
     .eq("sender", userId);
 
-  const payload = envelopes.map(({ value }: any, index: number) => ({
+  const payload = envelopes.map(({ value }, index: number) => ({
     value,
     round: null,
     receiver: null,

@@ -1,9 +1,6 @@
 import dayjs from "dayjs";
-import isBetween from "dayjs/plugin/isBetween";
-dayjs.extend(isBetween);
 
-import { RoundState } from "@/types/round";
-import { IRounds } from "@/types/round.types";
+import { IRounds, RoundStatus } from "@/types/round.types";
 
 export const randomId = (length = 6) => {
   return Math.random()
@@ -39,24 +36,63 @@ export const generateUUID = (): string => {
   });
 };
 
+// export const getRoundState = (rounds: IRounds): RoundState => {
+//   const now = dayjs();
+
+//   rounds.sort((a, b) => dayjs(a.startTime).valueOf() - dayjs(b.startTime).valueOf());
+
+//   if (now.isBefore(dayjs(rounds[0].startTime))) return RoundState.SETUP;
+
+//   for (let i = 0; i < rounds.length; i++) {
+//     const roundStart = dayjs(rounds[i].startTime);
+//     const roundEnd = dayjs(rounds[i].endTime);
+
+//     if (now.isBetween(roundStart, roundEnd, null, "[]")) return RoundState.IN_PROGRESS;
+
+//     if (i < rounds.length - 1) {
+//       const nextRoundStart = dayjs(rounds[i + 1].startTime);
+//       if (now.isAfter(roundEnd) && now.isBefore(nextRoundStart)) return RoundState.BREAK;
+//     }
+//   }
+
+//   return RoundState.FINISHED;
+// };
+
+type RoundState = {
+  roundStatus: RoundStatus;
+  currentRound: number | null;
+  nextRoundTime: string | null;
+};
+
 export const getRoundState = (rounds: IRounds): RoundState => {
   const now = dayjs();
+  let currentRound = null;
+  let nextRoundTime = null;
+  let roundStatus = RoundStatus.FINISHED;
 
-  rounds.sort((a, b) => dayjs(a.startTime).valueOf() - dayjs(b.startTime).valueOf());
-
-  if (now.isBefore(dayjs(rounds[0].startTime))) return RoundState.SETUP;
+  rounds.sort((a, b) => (dayjs(a.startTime).isBefore(dayjs(b.startTime)) ? -1 : 1));
 
   for (let i = 0; i < rounds.length; i++) {
-    const roundStart = dayjs(rounds[i].startTime);
-    const roundEnd = dayjs(rounds[i].endTime);
+    const round = rounds[i];
+    const startTime = dayjs(round.startTime);
+    const endTime = dayjs(round.endTime);
 
-    if (now.isBetween(roundStart, roundEnd, null, "[]")) return RoundState.IN_PROGRESS;
-
-    if (i < rounds.length - 1) {
-      const nextRoundStart = dayjs(rounds[i + 1].startTime);
-      if (now.isAfter(roundEnd) && now.isBefore(nextRoundStart)) return RoundState.BREAK;
+    if (now.isBefore(startTime)) {
+      roundStatus = i === 0 ? RoundStatus.SETUP : RoundStatus.BREAK;
+      nextRoundTime = startTime.toISOString();
+      break;
+    }
+    if (now.isAfter(startTime) && now.isBefore(endTime)) {
+      currentRound = round.value;
+      roundStatus = RoundStatus.IN_PROGRESS;
+      nextRoundTime = null;
+      break;
+    }
+    if (i === rounds.length - 1) {
+      roundStatus = RoundStatus.FINISHED;
+      nextRoundTime = null;
     }
   }
 
-  return RoundState.FINISHED;
+  return { currentRound, roundStatus, nextRoundTime };
 };

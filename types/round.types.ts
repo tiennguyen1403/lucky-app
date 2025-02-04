@@ -1,3 +1,10 @@
+export enum RoundStatus {
+  BREAK = "BREAK",
+  SETUP = "SETUP",
+  FINISHED = "FINISHED",
+  IN_PROGRESS = "IN_PROGRESS",
+}
+
 export type IRound = {
   id: string;
   value: number;
