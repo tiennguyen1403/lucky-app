@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { createClient } from "@/utils/server";
-import { generateRandomId, generateUUID } from "@/helpers";
+import { generateId, generateUUID } from "@/helpers";
 import { IEnvelopes } from "@/types/envelope.types";
 
 export async function GET(request: NextRequest) {
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     receiver: null,
     sender: userId,
     id: existingEnvelopes?.[index]?.id || generateUUID(),
-    eid: existingEnvelopes?.[index]?.eid || generateRandomId(15),
+    eid: existingEnvelopes?.[index]?.eid || generateId(15),
   }));
 
   const { error } = await supabase.from("envelopes").upsert(payload);

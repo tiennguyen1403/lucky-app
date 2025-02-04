@@ -8,8 +8,7 @@ import { Controller, useForm } from "react-hook-form";
 import Modal from "../Modal";
 import Input from "../Input";
 import InputPassword from "../InputPassword";
-import axiosInstance from "@/utils/axios";
-import { IResponse } from "@/types/general.types";
+import { createClient } from "@/utils/client";
 
 type Props = {
   isOpen: boolean;
@@ -21,16 +20,17 @@ const schema = z.object({
   password: z.string().min(1, "Password is required!"),
 });
 
-type LoginType = z.infer<typeof schema>;
+type LoginDto = z.infer<typeof schema>;
 
-const defaultValues: LoginType = { email: "", password: "" };
+const defaultValues: LoginDto = { email: "", password: "" };
 
 const LoginModal: React.FC<Props> = (props) => {
+  const supabase = createClient();
   const router = useRouter();
   const { isOpen, setIsOpen } = props;
   const [loading, setLoading] = React.useState(false);
 
-  const { control, reset, handleSubmit } = useForm<LoginType>({
+  const { control, reset, handleSubmit } = useForm<LoginDto>({
     resolver: zodResolver(schema),
     defaultValues,
   });
@@ -40,12 +40,12 @@ const LoginModal: React.FC<Props> = (props) => {
     setIsOpen(false);
   };
 
-  const handleLogin = async (values: LoginType) => {
+  const handleLogin = async (values: LoginDto) => {
     setLoading(true);
-    const { error } = await axiosInstance.post<null, IResponse<null>>("/login", values);
+    const { error } = await supabase.auth.signInWithPassword(values);
     setLoading(false);
 
-    if (error) return toast.error(error);
+    if (error) return toast.error(error.message);
 
     toast.success("Đăng nhập thành công!");
     router.push("/profile");

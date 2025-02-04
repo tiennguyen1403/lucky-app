@@ -28,11 +28,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: "Bao này đã được chọn rồi." });
   }
 
-  const { error } = await supabase
+  const { error, data: receiveEnvelope } = await supabase
     .from("envelopes")
     .update({ receiver: userId, round: currentRound })
-    .eq("eid", eid);
+    .eq("eid", eid)
+    .select("eid, value, round")
+    .single();
 
   if (error) return NextResponse.json({ success: false, error: error.message });
-  return NextResponse.json({ success: true, error: null });
+  return NextResponse.json({ success: true, error: null, data: receiveEnvelope });
 }

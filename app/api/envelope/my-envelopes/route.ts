@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
 
   const { data, error } = await supabase
     .from("envelopes")
-    .select("eid, value")
+    .select("eid, value, round")
     .eq("receiver", userId);
 
   if (error) return NextResponse.json({ success: false, error: error.message });

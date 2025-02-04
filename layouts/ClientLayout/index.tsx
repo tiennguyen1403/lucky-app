@@ -19,8 +19,9 @@ type Props = {
 
 const ClientLayout: React.FC<Props> = ({ children }) => {
   const supabase = createClient();
-  const { setRounds, setCurrentRound, setRoundStatus, setNextRoundTime } = useRoundStore();
-  const { setSetupEnvelopes, setEnvelopes } = useEnvelopeStore();
+  const { setRounds, setCurrentRound, setRoundStatus, setNextRoundTime, setNextRound } =
+    useRoundStore();
+  const { setSetupEnvelopes, setMyEnvelopes, setEnvelopes } = useEnvelopeStore();
   const [loading, setLoading] = React.useState(true);
 
   const getRounds = async () => {
@@ -47,6 +48,18 @@ const ClientLayout: React.FC<Props> = ({ children }) => {
     }
   };
 
+  const getMyEnvelopes = async () => {
+    const url = "/envelope/my-envelopes";
+    const { error, data = [] } = await axiosInstance.get<null, IResponse<IEnvelopes>>(url);
+    if (error) {
+      toast.error(error);
+      return Promise.reject(error);
+    } else {
+      setMyEnvelopes(data);
+      return Promise.resolve(data);
+    }
+  };
+
   const getEnvelopes = async () => {
     const url = "/envelope";
     const { error, data = [] } = await axiosInstance.get<null, IResponse<IEnvelopes>>(url);
@@ -60,15 +73,20 @@ const ClientLayout: React.FC<Props> = ({ children }) => {
   };
 
   React.useEffect(() => {
-    Promise.all([getRounds(), getEnvelopes(), getSetupEnvelopes()]).then(([rounds]) => {
-      const { currentRound, nextRoundTime, roundStatus } = getRoundState(rounds as IRounds);
+    Promise.all([getRounds(), getEnvelopes(), getMyEnvelopes(), getSetupEnvelopes()]).then(
+      ([rounds]) => {
+        const { currentRound, nextRoundTime, roundStatus, nextRound } = getRoundState(
+          rounds as IRounds
+        );
 
-      setRoundStatus(roundStatus);
-      setCurrentRound(currentRound);
-      setNextRoundTime(nextRoundTime);
+        setNextRound(nextRound);
+        setRoundStatus(roundStatus);
+        setCurrentRound(currentRound);
+        setNextRoundTime(nextRoundTime);
 
-      setLoading(false);
-    });
+        setLoading(false);
+      }
+    );
 
     const envelopesChannel = supabase.channel("envelopes");
 

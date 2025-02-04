@@ -1,60 +1,52 @@
 "use client";
 import React from "react";
+import numeral from "numeral";
 import Image from "next/image";
+import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { ProfileCircle } from "iconsax-react";
 
+import { RoundStatus } from "@/types/round.types";
+import { IResponse } from "@/types/general.types";
+import { IEnvelope } from "@/types/envelope.types";
+
+import useAuthStore from "@/store/authStore";
 import useRoundStore from "@/store/roundStore";
-import primaryRedEnvelope from "@/public/primary-envelope.png";
 import useEnvelopeStore from "@/store/envelopeStore";
-import FinishedAlert from "@/components/FinishedAlert";
+
+import Modal from "@/components/Modal";
 import SetupAlert from "@/components/SetupAlert";
 import BreakAlert from "@/components/BreakAlert";
-import { RoundStatus } from "@/types/round.types";
+import PickedAlert from "@/components/PickedAlert";
+import FinishedAlert from "@/components/FinishedAlert";
+
 import axiosInstance from "@/utils/axios";
-import { IResponse } from "@/types/general.types";
-import toast from "react-hot-toast";
 import { createClient } from "@/utils/client";
-import useAuthStore from "@/store/authStore";
 
-const className = `bg-primary text-white px-6 py-2 w-40 rounded-lg text-xl font-medium tracking-wide flex items-center justify-center gap-2`;
-
-const PickedAlert = () => {
-  const router = useRouter();
-  const goToProfile = () => router.push("/profile");
-
-  return (
-    <div className="col-span-10 flex flex-col items-center gap-4 pt-20 md:pt-28 px-6">
-      <p className="text-center text-secondary text-2xl md:text-3xl">
-        Ồ, bạn đã chơi vòng này rồi, vào profile xem kết quả nhé
-      </p>
-      <button className={className} onClick={goToProfile}>
-        <ProfileCircle variant="Bold" color="#ffffff" size={24} />
-        <span>Profile</span>
-      </button>
-    </div>
-  );
-};
+import primaryRedEnvelope from "@/public/primary-envelope.png";
 
 const PlayPage: React.FC = () => {
+  const router = useRouter();
   const supabase = createClient();
   const envelopesChannel = supabase.channel("envelopes");
-  const { roundStatus, currentRound } = useRoundStore();
-  const { envelopes } = useEnvelopeStore();
-  const { user } = useAuthStore();
 
-  // const handlePick = (id: string) => {
-  //   const updatedReceive = [...receive, { id, value: randomValue(50000, 150000, 10000) }];
-  //   const updatedTotal = updatedReceive.reduce((total, item) => (total += item.value), 0);
-  //   setReceive(updatedReceive);
-  //   setDescription(`Bạn đang có: ${numeral(updatedTotal).format("0,0")}₫`);
-  //   setError("Ồ, bạn đã chơi vòng này rồi, vào profile xem kết quả nhé!");
-  // };
+  const { roundStatus, currentRound } = useRoundStore();
+  const { envelopes, myEnvelopes, setMyEnvelopes } = useEnvelopeStore();
+  const { user } = useAuthStore();
+  const [alertOpen, setAlertOpen] = React.useState(false);
+  const [receiveEnvelope, setReceiveEnvelope] = React.useState<IEnvelope>({} as IEnvelope);
+
+  const isPicked = myEnvelopes.some((envelopes) => envelopes.round === currentRound);
+
+  const goToProfile = () => {
+    setAlertOpen(false);
+    router.push("/profile");
+  };
 
   const handlePick = async (eid: string) => {
     toast.dismiss();
     const url = "/envelope";
-    const { error } = await axiosInstance.post<null, IResponse<null>>(url, { eid, currentRound });
+    const payload = { eid, currentRound };
+    const { error, data = {} } = await axiosInstance.post<null, IResponse<IEnvelope>>(url, payload);
 
     if (error) {
       return toast.error(error);
@@ -73,14 +65,19 @@ const PlayPage: React.FC = () => {
       event: "tracking-envelopes",
       payload: { updatedEnvelopes },
     });
+
+    setAlertOpen(true);
+    setReceiveEnvelope(data as IEnvelope);
+    setMyEnvelopes([...myEnvelopes, data as IEnvelope]);
   };
 
   return (
-    <div className="h-full">
+    <>
       {roundStatus === RoundStatus.SETUP && <SetupAlert />}
       {roundStatus === RoundStatus.BREAK && <BreakAlert />}
       {roundStatus === RoundStatus.FINISHED && <FinishedAlert />}
-      {roundStatus === RoundStatus.IN_PROGRESS && (
+      {roundStatus === RoundStatus.IN_PROGRESS && isPicked && <PickedAlert />}
+      {roundStatus === RoundStatus.IN_PROGRESS && !isPicked && (
         <div className="h-full flex flex-col items-center justify-center py-2 pb-20">
           <p className="text-primary text-center text-5xl font-semibold mb-2">
             Vòng {currentRound}
@@ -112,7 +109,21 @@ const PlayPage: React.FC = () => {
           </div>
         </div>
       )}
-    </div>
+      <Modal
+        open={alertOpen}
+        title="Chúc mừng"
+        onConfirm={goToProfile}
+        okText="Tới trang profile"
+        onCancel={() => setAlertOpen(false)}
+      >
+        <p className="text-xl text-center my-4">
+          Bạn đã nhận được:{" "}
+          <span className="font-bold text-error">
+            {numeral(receiveEnvelope.value).format("0,0")}₫
+          </span>
+        </p>
+      </Modal>
+    </>
   );
 };
 

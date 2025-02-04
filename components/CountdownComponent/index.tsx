@@ -10,7 +10,7 @@ type Props = {
 const CountdownComponent: React.FC<Props> = ({ hours, minutes, seconds }) => {
   return (
     <div className="flex flex-col items-center gap-2 px-10 py-3 bg-white rounded-xl shadow-xl">
-      <p className="text-primary text-xl font-semibold">Vòng tiếp theo</p>
+      <p className="text-secondary text-xl font-semibold">Vòng tiếp theo</p>
       <div className=" flex items-center gap-6 text-[#af7b7a] text-xl font-semibold">
         <div className="flex flex-col items-center">
           <p className="tracking-wider">{zeroPad(hours)}</p>
